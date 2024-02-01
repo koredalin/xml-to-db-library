@@ -19,8 +19,9 @@ class AuthorRepository
         private PDO $conn
     ) {}
     
-    public function getOneBy(string $field, string $value): ?Author
+    public function getOneBy(string $field, $value): ?Author
     {
+        var_dump(__LINE__);
         $field = trim($field);
         $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE {$field} = :{$field}");
         $stmt->bindParam(":{$field}", $value);
@@ -29,9 +30,9 @@ class AuthorRepository
             return null;
         }
 
-        $authorArr = $stmt->fetch(PDO::FETCH_ASSOC);
-        print_r($authorArr);
-        $author = AuthorFactory::createFromDb($authorArr);
+        $authorAssoc = $stmt->fetch(PDO::FETCH_ASSOC);
+        print_r($authorAssoc);
+        $author = AuthorFactory::createFromDb($authorAssoc);
 
         return $author;
     }
@@ -43,30 +44,18 @@ class AuthorRepository
      * @param string $authorName
      * @return \Library\Entities\Author
      */
-    public function insertOneOnce(string $authorName): Author
+    public function insertOne(string $authorName): Author
     {
-//        if ($this->getOneBy('name', $authorName) === null) {
-//            
-//        }
+        var_dump(__LINE__);
+        // New author insert.
+        $insertAuthor = $this->conn->prepare("INSERT INTO ".self::TABLE_NAME." (name) VALUES (:name)");
+        $insertAuthor->bindParam(":name", $authorName);
+        $insertAuthor->execute();
+        $authorId = $this->conn->lastInsertId();
         
-        $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE name = :name");
-        $stmt->bindParam(":name", $authorName);
-        $stmt->execute();
-        if ($stmt->rowCount() === 0) {
-            // New author insert.
-            $insertAuthor = $this->conn->prepare("INSERT INTO ".self::TABLE_NAME." (name) VALUES (:name)");
-            $insertAuthor->bindParam(":name", $authorName);
-            $insertAuthor->execute();
-            $authorId = $this->conn->lastInsertId();
-            // We read the new record.
-            $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE id = " . (int) $authorId);
-            $stmt->execute();
-        }
+        // We read the new record.
+        $newAuthor = $this->getOneBy('id', (int) $authorId);
 
-        $authorArr = $stmt->fetch(PDO::FETCH_ASSOC);
-        print_r($authorArr);
-        $author = AuthorFactory::createFromDb($authorArr);
-
-        return $author;
+        return $newAuthor;
     }
 }

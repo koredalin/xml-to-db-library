@@ -19,6 +19,43 @@ class BookRepository
     public function __construct(
         private PDO $conn
     ) {}
+    
+    public function getOneBy(string $field, $value): ?Book
+    {
+        var_dump(__LINE__);
+        $field = trim($field);
+        $stmt = $this->conn->prepare("SELECT id, author_id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE {$field} = :{$field}");
+        $stmt->bindParam(":{$field}", $value);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            return null;
+        }
+
+        $bookAssoc = $stmt->fetch(PDO::FETCH_ASSOC);
+//        print_r($bookAssoc);
+        $book = BookFactory::createFromDb($bookAssoc);
+
+        return $book;
+    }
+    
+    public function getOneByAuthorAndBookName(Author $author, string $bookName): ?Book
+    {
+        var_dump($bookName);
+        $authorId = $author->getId();
+        $stmt = $this->conn->prepare("SELECT id, author_id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE author_id = :author_id AND name = :name");
+        $stmt->bindParam(":author_id", $authorId);
+        $stmt->bindParam(":name", $bookName);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            return null;
+        }
+
+        $bookAssoc = $stmt->fetch(PDO::FETCH_ASSOC);
+//        print_r($bookAssoc);
+        $book = BookFactory::createFromDb($bookAssoc);
+
+        return $book;
+    }
 
     /**
      * Inserts a book into the "books" db table.
@@ -27,45 +64,36 @@ class BookRepository
      * @param string $book
      * @return int
      */
-    public function insertOrUpdateOne(Author $author, string $bookName): Book
+    public function insertOne(Author $author, string $bookName): Book
     {
+        var_dump(__LINE__);
         $authorId = $author->getId();
-        var_dump($bookName);
-        $stmt = $this->conn->prepare("SELECT id, author_id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE author_id = :author_id AND name = :name");
-        $stmt->bindParam(":author_id", $authorId);
-        $stmt->bindParam(":name", $bookName);
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            var_dump(__LINE__);
-            $timestamp = time();
-            // Актуализация на съществуваща книга
-            $updateStmt = $this->conn->prepare("UPDATE ".self::TABLE_NAME." SET author_id = :author_id, name = :name, updated_at = {$timestamp} WHERE id = :id");
-            $updateStmt->bindParam(":author_id", $authorId);
-            $updateStmt->bindParam(":name", $bookName);
-            $bookArr = $stmt->fetch();
-            $updateStmt->bindParam(":id", $bookArr['id']);
-            $updateStmt->execute();
+        // New book insert.
+        $insertBook = $this->conn->prepare("INSERT INTO ".self::TABLE_NAME." (author_id, name) VALUES (:author_id, :name)");
+        $insertBook->bindParam(":author_id", $authorId);
+        $insertBook->bindParam(":name", $bookName);
+        $insertBook->execute();
+        $bookId = $this->conn->lastInsertId();
 
-//            return $bookArr['id'];
-//            $bookArr = $stmt->fetch(PDO::FETCH_ASSOC);
-            $bookId = $bookArr['id'];
-        } else {
-            var_dump(__LINE__);
-            // New book insert.
-            $insertBook = $this->conn->prepare("INSERT INTO ".self::TABLE_NAME." (author_id, name) VALUES (:author_id, :name)");
-            $insertBook->bindParam(":author_id", $authorId);
-            $insertBook->bindParam(":name", $bookName);
-            $insertBook->execute();
-            $bookId = $this->conn->lastInsertId();
-        }
-            var_dump(__LINE__);
-        // We read the new record.
-        $stmt = $this->conn->prepare("SELECT id, author_id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE id = " . (int) $bookId);
-        $stmt->execute();
+        $updatedBook = $this->getOneBy('id', $bookId);
 
-        $bookArr = $stmt->fetch(PDO::FETCH_ASSOC);
-        $book = BookFactory::createFromDb($bookArr);
+        return $updatedBook;
+    }
+    
+    public function updateOne(Book $book): Book
+    {
+        var_dump(__LINE__);
+        $bookId = $book->getId();
+        $timestamp = time();
+        // Актуализация на съществуваща книга
+        $updateStmt = $this->conn->prepare("UPDATE ".self::TABLE_NAME." SET author_id = :author_id, name = :name, updated_at = {$timestamp} WHERE id = :id");
+        $updateStmt->bindParam(":author_id", $book->author_id);
+        $updateStmt->bindParam(":name", $book->name);
+        $updateStmt->bindParam(":id", $bookId);
+        $updateStmt->execute();
 
-        return $book;
+        $updatedBook = $this->getOneBy('id', $bookId);
+
+        return $updatedBook;
     }
 }
