@@ -1,0 +1,14 @@
+<books>
+    <book>
+        <author>Захари Стоянов</author>
+        <name>Записки по българските въстания</name>
+    </book>
+    <book>
+        <author>Иван Вазов</author>
+        <name>Под игото</name>
+    </book>
+    <book>
+        <author>Иван Вазов</author>
+        <name>Молитва</name>
+    </book>
+</books>

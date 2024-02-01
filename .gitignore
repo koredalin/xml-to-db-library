@@ -1,0 +1,7 @@
+# Folders
+nbproject/
+logs/
+vendor/
+
+# Files
+composer.lock
