@@ -25,7 +25,7 @@ class RecordManager
         private AuthorRepository $authorRepository,
         private BookRepository $bookRepository
     ) {
-        $this->conn = $database->getConnection();
+        $this->conn = $this->database->getConnection();
     }
     
     public function iterateXml(string $folderPath): array
@@ -35,6 +35,10 @@ class RecordManager
     
     public function insertAll(array $xmlBooks): bool
     {
+        if (!$this->insertNewAuthors($xmlBooks)) {
+            return false;
+        }
+
         foreach ($xmlBooks as $xmlBook) {
             // Extract author name and book name from the XML
             $authorName = trim($xmlBook['xmlBook']->author);
@@ -43,7 +47,8 @@ class RecordManager
             try {
                 $author = $this->authorRepository->getOneBy('name', $authorName);
                 if (is_null($author)) {
-                    $author = $this->authorRepository->insertOne($authorName);
+                    // We should never come inside here.
+                    throw new \Exception('No such author in the database.');
                 }
 
                 $bookName = trim($xmlBook['xmlBook']->name);
@@ -57,13 +62,8 @@ class RecordManager
                 print_r($author);
                 print_r($book);
             } catch (\Exception $ex) {
-                $recordLogToFile = 3;
                 var_dump($ex->getMessage());
-                error_log(
-                    "Database exception: {$ex->getMessage()}",
-                    $recordLogToFile,
-                    __DIR__.'/../../logs/database_errors.log'
-                );
+                Logger::error($ex->getMessage(), 'database_errors.log');
 
                 return false;
             }
@@ -71,5 +71,36 @@ class RecordManager
         }
 
         return true;
+    }
+    
+    /**
+     * Filter and insert at once all new authors in the xml input list.
+     *
+     * @param array $xmlBooks
+     * @return bool
+     */
+    private function insertNewAuthors(array $xmlBooks): bool
+    {
+        try {
+            $authorsArr = $this->authorRepository->getAll();
+            $authorNames = array_column($authorsArr, 'name');
+            $xmlBooksAuthors = [];
+            foreach ($xmlBooks as $bookKey => $xmlBook) {
+                $xmlBooksAuthors[$bookKey] = trim($xmlBook['xmlBook']->author);
+            }
+            $newAuthors = array_diff($xmlBooksAuthors, $authorNames);
+            if (empty($newAuthors)) {
+                return true;
+            }
+
+            $isInsert = $this->authorRepository->insertMany($newAuthors);
+        } catch (\Exception $ex) {
+            var_dump($ex->getMessage());
+            Logger::error($ex->getMessage(), 'database_errors.log');
+
+            return false;
+        }
+        
+        return $isInsert;
     }
 }

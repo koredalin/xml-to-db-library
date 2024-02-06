@@ -11,4 +11,12 @@
         <author>Иван Вазов</author>
         <name>Молитва</name>
     </book>
+    <book>
+        <author>Христо Ботев</author>
+        <name>Майце си</name>
+    </book>
+    <book>
+        <author>Иван Звездев</author>
+        <name>Вкусът на България</name>
+    </book>
 </books>

@@ -75,9 +75,9 @@ class BookRepository
         $insertBook->execute();
         $bookId = $this->conn->lastInsertId();
 
-        $updatedBook = $this->getOneBy('id', $bookId);
+        $newBook = $this->getOneBy('id', $bookId);
 
-        return $updatedBook;
+        return $newBook;
     }
     
     public function updateOne(Book $book): Book

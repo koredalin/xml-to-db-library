@@ -19,11 +19,38 @@ class AuthorRepository
         private PDO $conn
     ) {}
     
+    public function getAll(): array
+    {
+        $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME.";");
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            return [];
+        }
+
+        $authors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $authors;
+    }
+
+    public function getAllbyIds(array $ids): array
+    {
+        $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE id IN (:ids);");
+        $stmt->bindParam(":ids", $ids);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            return [];
+        }
+
+        $authors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $authors;
+    }
+    
     public function getOneBy(string $field, $value): ?Author
     {
         var_dump(__LINE__);
         $field = trim($field);
-        $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE {$field} = :{$field}");
+        $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE {$field} = :{$field};");
         $stmt->bindParam(":{$field}", $value);
         $stmt->execute();
         if ($stmt->rowCount() === 0) {
@@ -35,6 +62,20 @@ class AuthorRepository
         $author = AuthorFactory::createFromDb($authorAssoc);
 
         return $author;
+    }
+
+    public function insertMany(array $authorNames): bool
+    {
+        $placeholders = implode(',', array_fill(0, count($authorNames), '(?)'));
+        $sql = "INSERT INTO " . self::TABLE_NAME . " (name) VALUES " . $placeholders;
+
+        $stmt = $this->conn->prepare($sql);
+
+        foreach (array_values($authorNames) as $index => $name) {
+            $stmt->bindValue($index + 1, $name);
+        }
+
+        return $stmt->execute();
     }
 
     /**
