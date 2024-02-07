@@ -1,0 +1,10 @@
+<books>
+    <book>
+        <author>村上春樹</author>
+        <name>ノルウェイの森</name>
+    </book>
+    <book>
+        <author>夏目漱石</author>
+        <name>吾輩は猫である</name>
+    </book>
+</books>
