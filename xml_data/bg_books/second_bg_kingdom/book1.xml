@@ -19,4 +19,32 @@
         <author>Иван Звездев</author>
         <name>Вкусът на България</name>
     </book>
+    <book>
+        <author>Владимир Русалиев</author>
+        <name>Бездомник в нощта</name>
+    </book>
+    <book>
+        <author>Румен Стоичков</author>
+        <name>Звуците на нощта</name>
+    </book>
+    <book>
+        <author>Блага Димитрова</author>
+        <name>Лавина</name>
+    </book>
+    <book>
+        <author>Георги Божинов</author>
+        <name>Смок свири на върба</name>
+    </book>
+    <book>
+        <author>Стефан Дичев</author>
+        <name>Ескадронът</name>
+    </book>
+    <book>
+        <author>Васил И. Попов</author>
+        <name>Следвайки слънцето</name>
+    </book>
+    <book>
+        <author>Ивомир Колев</author>
+        <name>Българската история накратко</name>
+    </book>
 </books>
