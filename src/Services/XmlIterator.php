@@ -2,7 +2,6 @@
 
 namespace Library\Services;
 
-use XMLReader;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -18,27 +17,12 @@ class XmlIterator
     public const XML_FOLDER_PATH = __DIR__ . DIRECTORY_SEPARATOR
         . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
         . 'xml_data' . DIRECTORY_SEPARATOR;
-    
-//    private string $dirPath;
-//    private array $rowData;
-//
-//
-//    public function setDirPath(string $path): void
-//    {
-//        $this->dirPath = $path;
-//    }
-//
-//    public function getDirPath(): string
-//    {
-//        return $this->dirPath;
-//    }
 
     public function iterate(string $dirPath): array
     {
         libxml_use_internal_errors(true);
 
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirPath), RecursiveIteratorIterator::LEAVES_ONLY);
-//        echo '<pre>';
         $result = [];
         
         foreach ($files as $name => $file) {
@@ -60,14 +44,13 @@ class XmlIterator
             }
 
             foreach ($xmlContent->book as $xmlBook) {
-//                print_r($xmlBook);
                 $result[] = [
                     'filePath' => $file->getRealPath(),
                     'xmlBook' => $xmlBook,
                 ];
             }
         }
-//        echo '</pre>';
+
         libxml_use_internal_errors(false);
         
         return $result;

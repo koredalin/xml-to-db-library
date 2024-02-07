@@ -25,7 +25,7 @@ class Logger
     public static function error(string $message, string $fileName): void
     {
         error_log(
-            "Database exception: {$message}",
+            "Database exception ".date('Y-m-d H:i:s').": {$message}" . PHP_EOL . PHP_EOL,
             self::TO_FILE,
             self::LOGS_FOLDER . $fileName
         );

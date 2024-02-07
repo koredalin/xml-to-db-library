@@ -26,11 +26,6 @@ class RecordManager
         $this->conn = $this->database->getConnection();
     }
     
-    public function iterateXml(string $folderPath): array
-    {
-        return $this->iterator->iterate($folderPath);
-    }
-    
     public function insertAll(array $xmlBooks): bool
     {
         if (!$this->insertNewAuthors($xmlBooks)) {
@@ -49,16 +44,13 @@ class RecordManager
                     throw new \Exception('No such author in the database.');
                 }
 
-                $bookName = trim($xmlBook['xmlBook']->name);
-                $book = $this->bookRepository->getOneByAuthorAndBookName($author, $bookName);
+                $bookTitle = trim($xmlBook['xmlBook']->name);
+                $book = $this->bookRepository->getOneByAuthorAndBookTitle($author, $bookTitle);
                 if (is_null($book)) {
-                    $book = $this->bookRepository->insertOne($author, $bookName);
+                    $book = $this->bookRepository->insertOne($author, $bookTitle);
                 } else {
                     $book = $this->bookRepository->updateOne($book);
                 }
-
-//                print_r($author);
-//                print_r($book);
             } catch (\Exception $ex) {
                 var_dump($ex->getMessage());
                 Logger::error($ex->getMessage(), 'database_errors.log');

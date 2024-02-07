@@ -11,7 +11,7 @@ class BookFactory
         return new Book(
             (int) $data['id'],
             (int) $data['author_id'],
-            trim($data['name']),
+            trim($data['title']),
             (int) $data['created_at'],
             (int) $data['updated_at'],
         );

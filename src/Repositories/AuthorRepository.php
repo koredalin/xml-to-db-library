@@ -48,7 +48,6 @@ class AuthorRepository
     
     public function getOneBy(string $field, $value): ?Author
     {
-//        var_dump(__LINE__);
         $field = trim($field);
         $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE {$field} = :{$field};");
         $stmt->bindParam(":{$field}", $value);
@@ -58,7 +57,6 @@ class AuthorRepository
         }
 
         $authorAssoc = $stmt->fetch(PDO::FETCH_ASSOC);
-//        print_r($authorAssoc);
         $author = AuthorFactory::createFromDb($authorAssoc);
 
         return $author;
@@ -87,7 +85,6 @@ class AuthorRepository
      */
     public function insertOne(string $authorName): Author
     {
-//        var_dump(__LINE__);
         // New author insert.
         $insertAuthor = $this->conn->prepare("INSERT INTO ".self::TABLE_NAME." (name) VALUES (:name)");
         $insertAuthor->bindParam(":name", $authorName);
@@ -99,12 +96,28 @@ class AuthorRepository
 
         return $newAuthor;
     }
-    
-    public function findByName(string $name): array
+
+    /**
+     * The query search for author-book pairs from the database.
+     *
+     * @param string $name
+     * @return array
+     */
+    public function findBooksByName(string $name): array
     {
-//        var_dump(__LINE__);
-        $field = trim($field);
-        $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE name ILIKE :name;");
+        $name = '%' . trim(mb_strtolower($name)) . '%';
+        $sqlStr = 
+            'SELECT
+                a.id AS author_id,
+                a.name AS author_name,
+                b.id AS book_id,
+                b.title AS book_title
+            FROM '.self::TABLE_NAME.' AS a
+            LEFT JOIN '.BookRepository::TABLE_NAME.' AS b
+            ON a.id = b.author_id
+            WHERE LOWER(a.name) LIKE :name
+            ORDER BY a.name, b.title;';
+        $stmt = $this->conn->prepare($sqlStr);
         $stmt->bindParam(":name", $name);
         $stmt->execute();
         if ($stmt->rowCount() === 0) {

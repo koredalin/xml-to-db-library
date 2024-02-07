@@ -4,6 +4,7 @@
     margin: 0 auto;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 1.2em;
 }
 
 @media (max-width: 600px) {
@@ -48,4 +49,37 @@
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+/*Books List*/
+#books_list {
+    width: 90%;
+    margin: 30px auto 20px auto;
+}
+
+.author-name,
+.book-title {
+    display: inline-block;
+    padding: 5px 10px;
+    width: 46%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.book-container {
+    animation: slideInFromLeft 0.5s ease-out forwards;
+    opacity: 0; /* Започва от невидимо състояние */
 }

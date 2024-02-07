@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("parse_xml_btn").addEventListener("click", function() {
+    document.getElementById("xml_parse_btn").addEventListener("click", function() {
       const errorsDiv = document.getElementById('parser_errors');
       
       let xmlText = function () {

@@ -3,7 +3,15 @@
 <div class="default-container">
     <h1><?php echo $title; ?></h1>
 
-    <button id="parse_xml_btn">Parse XML input</button>
+    <button id="xml_parse_btn">Parse XML input</button>
+    
+    <div>
+        <span><input type="text" name="author_name_search" id="author_name_search" ></span>
+        <span><button id="author_name_search_submit">Author Search</button></span>
+    </div>
+    
+    <div id="books_list"></div>
+    <div id="books_list_errors"></div>
 </div>
 
 <!-- XML input text modal window. -->
@@ -18,5 +26,6 @@
 </div>
 
 <script src="js/parse_xml.js"></script>
+<script src="js/books_list.js"></script>
 
 <?php require_once 'layouts/footer.php';
