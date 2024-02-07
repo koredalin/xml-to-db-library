@@ -3,11 +3,12 @@
 <div class="default-container">
     <h1><?php echo $title; ?></h1>
 
-    <button id="xml_parse_btn">Parse XML input</button>
-    
     <div>
-        <span><input type="text" name="author_name_search" id="author_name_search" ></span>
-        <span><button id="author_name_search_submit">Author Search</button></span>
+        <div><button id="xml_parse_btn" class="parse-btn" >Parse XML input</button></div>
+        <div>
+            <input type="text" name="author_name_search" id="author_name_search" >
+            <button id="author_name_search_submit" class="search-btn">Author Search</button>
+        </div>
     </div>
     
     <div id="books_list"></div>

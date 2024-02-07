@@ -83,3 +83,57 @@
     animation: slideInFromLeft 0.5s ease-out forwards;
     opacity: 0; /* Започва от невидимо състояние */
 }
+
+/*HTML Controls*/
+.search-btn {
+    display: inline-block;
+    outline: 0;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 4px;
+    font-size: 13px;
+    height: 30px;
+    background-color: #9147ff;
+    color: white;
+    padding: 0 20px;
+}
+
+.search-btn:hover {
+    background-color: #772ce8;
+}
+
+.parse-btn {
+    display: inline-block;
+    outline: 0;
+    cursor: pointer;
+    padding: 5px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    vertical-align: middle;
+    border: 1px solid;
+    border-radius: 6px;
+    color: #0366d6;
+    background-color: #fafbfc;
+    border-color: #1b1f2326;
+    box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
+    transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    transition-property: color, background-color, border-color;
+    margin: 20px 0 10px 0;
+}
+
+.parse-btn:hover {
+    color: #ffffff;
+    background-color: #0366d6;
+    border-color: #1b1f2326;
+    box-shadow: rgba(27, 31, 35, 0.1) 0px 1px 0px 0px, rgba(255, 255, 255, 0.03) 0px 1px 0px 0px inset;
+    transition-duration: 0.1s;
+}
+
+#author_name_search {
+    margin-top: 20px;
+    margin-right: 3px;
+    padding: 5px;
+    border-radius: 5px;
+}

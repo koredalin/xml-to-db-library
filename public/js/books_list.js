@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("author_name_search_submit").addEventListener("click", function() {
+    let executeBooksSearch = function() {
       const errorsDiv = document.getElementById('books_list_errors');
       const authorSearchInput = document.getElementById('author_name_search');
       if (authorSearchInput.value.length === 0) {
@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         let fillBooksHtml = function(books) {
           let booksContainerDiv = document.getElementById('books_list');
+          booksContainerDiv.innerHTML = '';
           let delay = 0.5;
           Object.values(books).forEach(book => {
             let rowDiv = document.createElement("div");
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         
         searchAuthor();
-    });
+    };
 
     // Затваряне на модалния прозорец
     var modal = document.getElementById("xml_text_modal");
@@ -67,15 +68,13 @@ document.addEventListener("DOMContentLoaded", function() {
             modal.style.display = "none";
         }
     };
+
+    // Books search input event listeners.
+    document.getElementById("author_name_search_submit").addEventListener("click", executeBooksSearch);
+
+    document.getElementById("author_name_search").addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            executeBooksSearch();
+        }
+    });
 });
-
-
-//document.getElementById("author_name_search_submit").addEventListener("click", executeSearch);
-//
-//// Прикрепяне на функцията към keyup събитието на текстовото поле
-//document.getElementById("author_name_search").addEventListener("keyup", function(event) {
-//    // Проверка дали натиснатият клавиш е Enter
-//    if (event.key === "Enter") {
-//        executeSearch(); // Изпълнение на функцията, ако е натиснат Enter
-//    }
-//});

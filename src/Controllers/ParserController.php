@@ -32,23 +32,15 @@ class ParserController extends Controller
                 new BookRepository($this->db)
             );
             $recordManager->insertAll($xmlInputAsArray);
+            
+            $parsedXmlAsText = $xmlIterator->parseXMLFilesAsText(XmlIterator::XML_FOLDER_PATH, XmlIterator::XML_FOLDER_PATH);
+            $jsonResponseData['data']['parsed_xml_as_text'] = $parsedXmlAsText;
         } catch(\Exception $ex) {
             Logger::error($ex->message(), 'db_errors.log');
             $jsonResponseData['success'] = false;
             $jsonResponseData['message'] = 'Database input failed. Please, review the error logs.';
         }
         
-        $this->returnJson($jsonResponseData);
-    }
-    
-    public function parseXmlAsText()
-    {
-        $xmlIterator = new XmlIterator();
-        $parsedXmlAsText = $xmlIterator->parseXMLFilesAsText(XmlIterator::XML_FOLDER_PATH, XmlIterator::XML_FOLDER_PATH);
-
-        $jsonResponseData = self::RETURN_JSON_SCELETON;
-        $jsonResponseData['data']['parsed_xml_as_text'] = $parsedXmlAsText;
-
         $this->returnJson($jsonResponseData);
     }
 }

@@ -19,7 +19,6 @@ $router = new Router($database);
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/parser/xml_to_db', ParserController::class, 'transferXmlToDb');
-$router->get('/parser/parse_xml', ParserController::class, 'parseXmlAsText');
 $router->get('/data/search_by_author', DataController::class, 'searchBooksByAuthorName');
 
 $router->dispatch();
