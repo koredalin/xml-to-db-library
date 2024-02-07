@@ -1,16 +1,18 @@
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("parse_xml_btn").addEventListener("click", function() {
-        // Използвайте `fetch()` за изпращане на GET заявка
+      const errorsDiv = document.getElementById('parser_errors');
+      
+      let xmlText = function () {
+        // Read xml files and shows them as text.
         fetch('/parser/parse_xml')
             .then(function(response) {
-                // Уверете се, че заявката е успешна
+                // Is successful request?
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.text();
             })
             .then(function(data) {
-//              console.log(data);
               const parsedData = JSON.parse(data);
               const parsedXmlAsText = parsedData.data.parsed_xml_as_text;
               console.log(parsedData['data']);
@@ -23,8 +25,31 @@ document.addEventListener("DOMContentLoaded", function() {
               document.getElementById("xml_text_modal").style.display = "block";
             })
             .catch(function(error) {
-                // Обработка на грешки
-                console.error('There has been a problem with your fetch operation:', error);
+                // Fetch request failure error.
+                errorsDiv.innerHTML = 'There has been a problem with your fetch operation:', error;
+            });
+        };
+        
+        // Parse xml data and transfers it to the database.
+        fetch('/parser/xml_to_db')
+            .then(function(response) {
+                // Is successful request?
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(function(data) {
+              const parsedData = JSON.parse(data);
+              if (parsedData.success) {
+                xmlText();
+              } else {
+                errorsDiv.innerHTML = parsedData.message;
+              }
+            })
+            .catch(function(error) {
+                // Fetch request failure error.
+                errorsDiv.innerHTML = 'There has been a problem with your fetch operation:', error;
             });
     });
 

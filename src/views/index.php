@@ -13,6 +13,7 @@
             <span class="close">&times;</span>
             <div id="xml_text"></div>
         </div>
+        <div id="parser_errors"></div>
     </pre>
 </div>
 

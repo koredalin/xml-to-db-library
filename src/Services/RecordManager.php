@@ -4,7 +4,6 @@ namespace Library\Services;
 
 use Library\Services\Database;
 use PDO;
-use Library\Services\XmlIterator;
 use Library\Repositories\AuthorRepository;
 use Library\Repositories\BookRepository;
 use Library\Entities\Author;
@@ -21,7 +20,6 @@ class RecordManager
     
     public function __construct(
         private Database $database,
-        private XmlIterator $iterator,
         private AuthorRepository $authorRepository,
         private BookRepository $bookRepository
     ) {
