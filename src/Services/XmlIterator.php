@@ -14,6 +14,11 @@ use RecursiveIteratorIterator;
  */
 class XmlIterator
 {
+    // Default XML content folder path.
+    public const XML_FOLDER_PATH = __DIR__ . DIRECTORY_SEPARATOR
+        . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
+        . 'xml_data' . DIRECTORY_SEPARATOR;
+    
 //    private string $dirPath;
 //    private array $rowData;
 //
@@ -45,14 +50,10 @@ class XmlIterator
             $xmlContent = simplexml_load_file($file->getRealPath());
 
             if ($xmlContent === false) {
-                $recordLogToFile = 3;
                 // Record the errors into log.
                 foreach (libxml_get_errors() as $error) {
-                    error_log(
-                        "XML error in file {$file->getRealPath()}: {$error->message}",
-                        $recordLogToFile,
-                        __DIR__.'/../../logs/xml_errors.log'
-                    );
+                    $parserError = "XML error in file {$file->getRealPath()}: {$error->message}";
+                    Logger::error($parserError, 'xml_parser_errors.log');
                 }
                 libxml_clear_errors();
                 continue;
@@ -71,4 +72,36 @@ class XmlIterator
         
         return $result;
     }
+
+    /**
+     * $defaultDir is an optional parameter.
+     * If we want to trim the general folder path from each file path in the final result - we should set it same as the original $dir parameter.
+     * 
+     * @param string $dir
+     * @param string $defaultDir
+     * @return array
+     */
+    public function parseXMLFilesAsText(string $dir, string $defaultDir = ''): array
+    {
+        $results = [];
+        $files = scandir($dir);
+
+        foreach ($files as $key => $value) {
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+            if (!is_dir($path)) {
+                if (strpos($path, '.xml') !== false) {
+                    $contents = file_get_contents($path);
+                    // The URI folder.
+                    $subfolderPath = strlen($defaultDir) > 0 ? str_replace(realpath($defaultDir . DIRECTORY_SEPARATOR), '', $path) : $path;
+                    $results[] = ['path' => $subfolderPath, 'content' => $contents]; // Добавяне на пътя и съдържанието към масива
+                }
+            } elseif ($value != "." && $value != "..") {
+                // Recursive subfolders reading.
+                $results = array_merge($results, $this->parseXMLFilesAsText($path, $defaultDir));
+            }
+        }
+
+        return $results;
+    }
+
 }

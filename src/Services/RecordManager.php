@@ -43,7 +43,7 @@ class RecordManager
             // Extract author name and book name from the XML
             $authorName = trim($xmlBook['xmlBook']->author);
 
-            echo '<pre>';
+//            echo '<pre>';
             try {
                 $author = $this->authorRepository->getOneBy('name', $authorName);
                 if (is_null($author)) {
@@ -59,15 +59,15 @@ class RecordManager
                     $book = $this->bookRepository->updateOne($book);
                 }
 
-                print_r($author);
-                print_r($book);
+//                print_r($author);
+//                print_r($book);
             } catch (\Exception $ex) {
                 var_dump($ex->getMessage());
                 Logger::error($ex->getMessage(), 'database_errors.log');
 
                 return false;
             }
-            echo '</pre>';
+//            echo '</pre>';
         }
 
         return true;

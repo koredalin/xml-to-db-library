@@ -22,7 +22,7 @@ class BookRepository
     
     public function getOneBy(string $field, $value): ?Book
     {
-        var_dump(__LINE__);
+//        var_dump(__LINE__);
         $field = trim($field);
         $stmt = $this->conn->prepare("SELECT id, author_id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE {$field} = :{$field}");
         $stmt->bindParam(":{$field}", $value);
@@ -40,7 +40,7 @@ class BookRepository
     
     public function getOneByAuthorAndBookName(Author $author, string $bookName): ?Book
     {
-        var_dump($bookName);
+//        var_dump($bookName);
         $authorId = $author->getId();
         $stmt = $this->conn->prepare("SELECT id, author_id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE author_id = :author_id AND name = :name");
         $stmt->bindParam(":author_id", $authorId);
@@ -66,7 +66,7 @@ class BookRepository
      */
     public function insertOne(Author $author, string $bookName): Book
     {
-        var_dump(__LINE__);
+//        var_dump(__LINE__);
         $authorId = $author->getId();
         // New book insert.
         $insertBook = $this->conn->prepare("INSERT INTO ".self::TABLE_NAME." (author_id, name) VALUES (:author_id, :name)");
@@ -82,7 +82,7 @@ class BookRepository
     
     public function updateOne(Book $book): Book
     {
-        var_dump(__LINE__);
+//        var_dump(__LINE__);
         $bookId = $book->getId();
         $timestamp = time();
         // Актуализация на съществуваща книга

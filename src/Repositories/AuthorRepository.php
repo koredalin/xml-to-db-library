@@ -48,7 +48,7 @@ class AuthorRepository
     
     public function getOneBy(string $field, $value): ?Author
     {
-        var_dump(__LINE__);
+//        var_dump(__LINE__);
         $field = trim($field);
         $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE {$field} = :{$field};");
         $stmt->bindParam(":{$field}", $value);
@@ -58,7 +58,7 @@ class AuthorRepository
         }
 
         $authorAssoc = $stmt->fetch(PDO::FETCH_ASSOC);
-        print_r($authorAssoc);
+//        print_r($authorAssoc);
         $author = AuthorFactory::createFromDb($authorAssoc);
 
         return $author;
@@ -87,7 +87,7 @@ class AuthorRepository
      */
     public function insertOne(string $authorName): Author
     {
-        var_dump(__LINE__);
+//        var_dump(__LINE__);
         // New author insert.
         $insertAuthor = $this->conn->prepare("INSERT INTO ".self::TABLE_NAME." (name) VALUES (:name)");
         $insertAuthor->bindParam(":name", $authorName);
@@ -98,5 +98,19 @@ class AuthorRepository
         $newAuthor = $this->getOneBy('id', (int) $authorId);
 
         return $newAuthor;
+    }
+    
+    public function findByName(string $name): array
+    {
+//        var_dump(__LINE__);
+        $field = trim($field);
+        $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME." WHERE name ILIKE :name;");
+        $stmt->bindParam(":name", $name);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            return [];
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
