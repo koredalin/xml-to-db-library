@@ -20,17 +20,26 @@ class ParserController extends Controller
         $jsonResponseData = self::RETURN_JSON_SCELETON;
 
         try {
+            $this->transferXmlToDbOnly();
+            
             $xmlIterator = new XmlIterator();
-            $xmlInputAsArray = $xmlIterator->iterate(XmlIterator::XML_FOLDER_PATH);
-            
-            $recordManager = new RecordManager(
-                new AuthorRepository($this->db),
-                new BookRepository($this->db)
-            );
-            $recordManager->insertAll($xmlInputAsArray);
-            
             $parsedXmlAsText = $xmlIterator->parseXMLFilesAsText(XmlIterator::XML_FOLDER_PATH, XmlIterator::XML_FOLDER_PATH);
             $jsonResponseData['data']['parsed_xml_as_text'] = $parsedXmlAsText;
+        } catch(\Exception $ex) {
+            Logger::error($ex->message(), 'db_errors.log');
+            $jsonResponseData['success'] = false;
+            $jsonResponseData['message'] = 'Database input failed.';
+        }
+        
+        $this->returnJson($jsonResponseData);
+    }
+
+    public function transferXmlToDbCron()
+    {
+        $jsonResponseData = self::RETURN_JSON_SCELETON;
+
+        try {
+            $this->transferXmlToDbOnly();
         } catch(\Exception $ex) {
             Logger::error($ex->message(), 'db_errors.log');
             $jsonResponseData['success'] = false;
@@ -38,5 +47,17 @@ class ParserController extends Controller
         }
         
         $this->returnJson($jsonResponseData);
+    }
+    
+    private function transferXmlToDbOnly(): void
+    {
+        $xmlIterator = new XmlIterator();
+        $xmlInputAsArray = $xmlIterator->iterate(XmlIterator::XML_FOLDER_PATH);
+
+        $recordManager = new RecordManager(
+            new AuthorRepository($this->db),
+            new BookRepository($this->db)
+        );
+        $recordManager->insertAll($xmlInputAsArray);
     }
 }

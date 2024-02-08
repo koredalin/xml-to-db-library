@@ -2,7 +2,7 @@
 
 namespace Library\Controllers;
 
-use Library\Services\AbstractDatabase;
+use Library\Services\Databases\AbstractDatabase;
 
 use Library\Request;
 

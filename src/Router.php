@@ -2,7 +2,7 @@
 
 namespace Library;
 
-use Library\Services\AbstractDatabase;
+use Library\Services\Databases\AbstractDatabase;
 
 /**
  * Description of Router
@@ -47,26 +47,6 @@ class Router
             $controller->{$action}();
         } else {
             throw new \Exception("No route found for URI: $uri");
-        }
-    }
-    
-    // ...
-    public function dispatchGpt($url) {
-        // Парсване на URL и параметри
-        // ...
-
-        if (array_key_exists($url, $this->routes)) {
-            $controller = new $this->routes[$url]['controller'];
-            $action = $this->routes[$url]['action'];
-
-            // Предполагаме, че имаме извлечени параметри
-            $params = $this->extractParams($url);
-
-            // Извикване на метода на контролера с параметрите
-            call_user_func_array([$controller, $action], $params);
-        } else {
-            // Обработка на 404 Not Found
-            echo "404 Not Found";
         }
     }
 }
