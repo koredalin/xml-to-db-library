@@ -78,10 +78,11 @@ class BookRepository
     public function updateOne(Book $book): Book
     {
         $bookId = $book->getId();
-        $timestamp = time();
-        $updateStmt = $this->conn->prepare("UPDATE ".self::TABLE_NAME." SET author_id = :author_id, title = :title, updated_at = {$timestamp} WHERE id = :id");
+        $time = date('Y-m-d H:i:s');
+        $updateStmt = $this->conn->prepare("UPDATE ".self::TABLE_NAME." SET author_id = :author_id, title = :title, updated_at = :updated_at WHERE id = :id");
         $updateStmt->bindParam(":author_id", $book->author_id);
         $updateStmt->bindParam(":title", $book->title);
+        $updateStmt->bindParam(":updated_at", $time);
         $updateStmt->bindParam(":id", $bookId);
         $updateStmt->execute();
 

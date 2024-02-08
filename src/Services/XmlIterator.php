@@ -4,6 +4,7 @@ namespace Library\Services;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Library\Services\Exceptions\XmlParserException;
 
 
 /**
@@ -38,6 +39,8 @@ class XmlIterator
                 foreach (libxml_get_errors() as $error) {
                     $parserError = "XML error in file {$file->getRealPath()}: {$error->message}";
                     Logger::error($parserError, 'xml_parser_errors.log');
+
+                    throw new XmlParserException('XML file parse error occured.');
                 }
                 libxml_clear_errors();
                 continue;

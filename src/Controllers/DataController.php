@@ -21,7 +21,7 @@ class DataController extends Controller
             $authorRepository = new AuthorRepository($this->db);
             $jsonResponseData['data'] = $authorRepository->findBooksByName($authorNameSearchStr);
         } catch(\Exception $ex) {
-            Logger::error($ex->getMessage(), 'db_errors.log');
+            Logger::error($ex->getMessage(), 'database_errors.log');
             $jsonResponseData['success'] = false;
             $jsonResponseData['message'] = 'Database input failed. Please, review the error logs.';
         }

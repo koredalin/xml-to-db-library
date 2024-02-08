@@ -16,6 +16,7 @@ class ApplicationException extends Exception
         // some code
 
         // make sure everything is assigned properly
+        $message = get_class($this).'. '.$message;
         parent::__construct($message, $code, $previous);
     }
 }

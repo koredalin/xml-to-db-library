@@ -4,6 +4,7 @@ namespace Library\Services;
 
 use Library\Repositories\AuthorRepository;
 use Library\Repositories\BookRepository;
+use Library\Services\Exceptions\ApplicationException;
 
 /**
  * Description of RecordManager
@@ -42,9 +43,11 @@ class RecordManager
                     $book = $this->bookRepository->updateOne($book);
                 }
             } catch (\Exception $ex) {
+                // We record the real exception into the log file.
                 Logger::error($ex->getMessage(), 'database_errors.log');
 
-                return false;
+                // We hide the message from the common user.
+                throw new ApplicationException('An application exception occured.');
             }
         }
 
@@ -73,9 +76,11 @@ class RecordManager
 
             $isInsert = $this->authorRepository->insertMany($newAuthors);
         } catch (\Exception $ex) {
+            // We record the real exception into the log file.
             Logger::error($ex->getMessage(), 'database_errors.log');
 
-            return false;
+            // We hide the message from the common user.
+            throw new ApplicationException('An application exception occured.');
         }
         
         return $isInsert;
