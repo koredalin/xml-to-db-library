@@ -1,6 +1,6 @@
 <?php
 
-return [
+$databaseParams = [
     'mysql' => [
         'host' => 'localhost',
         'dbName' => 'library',
@@ -11,6 +11,11 @@ return [
         'host' => 'localhost',
         'dbName' => 'library',
         'userName' => 'postgres',
-        'password' => 'aloe',
+        'password' => '',
     ],
 ];
+
+// Secure database settings in git ignored file.
+// require 'database.local.php';
+
+return $databaseParams;

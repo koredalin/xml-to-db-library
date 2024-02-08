@@ -33,8 +33,8 @@ All exceptions are logged to the `/logs` directory, aiding in debugging and moni
 ## Future Improvements
 
 - Enhanced exception handling to provide more detailed feedback and fail gracefully.
-- Implement batch insert operations for adding books to improve performance.
-- Select of all authors and books in a single operation rather than individually to enhance app performance.
+- Implement batch insert operations for adding books, similar to authors insert functionality to improve performance.
+- Select of all author-book pairs in a single operation rather than individually to enhance app performance.
 
 ## Setup and Configuration
 

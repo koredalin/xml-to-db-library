@@ -19,7 +19,7 @@ class AuthorRepository
         private PDO $conn
     ) {}
     
-    public function getAll(): array
+    public function findAll(): array
     {
         $stmt = $this->conn->prepare("SELECT id, name, created_at, updated_at FROM ".self::TABLE_NAME.";");
         $stmt->execute();
@@ -120,6 +120,33 @@ class AuthorRepository
             ORDER BY a.name, b.title;';
         $stmt = $this->conn->prepare($sqlStr);
         $stmt->bindParam(":name", $name);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            return [];
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * The query search for author-book pairs from the database.
+     *
+     * @param string $name
+     * @return array
+     */
+    public function findAllBooks(): array
+    {
+        $sqlStr = 
+            'SELECT
+                a.id AS author_id,
+                a.name AS author_name,
+                b.id AS book_id,
+                b.title AS book_title
+            FROM '.self::TABLE_NAME.' AS a
+            LEFT JOIN '.BookRepository::TABLE_NAME.' AS b
+            ON a.id = b.author_id
+            ORDER BY a.name, b.title;';
+        $stmt = $this->conn->prepare($sqlStr);
         $stmt->execute();
         if ($stmt->rowCount() === 0) {
             return [];

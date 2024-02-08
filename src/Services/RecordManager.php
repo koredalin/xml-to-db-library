@@ -4,6 +4,8 @@ namespace Library\Services;
 
 use Library\Repositories\AuthorRepository;
 use Library\Repositories\BookRepository;
+use Library\Entities\Factories\AuthorFactory;
+use Library\Entities\Author;
 use Library\Services\Exceptions\ApplicationException;
 
 /**
@@ -20,22 +22,23 @@ class RecordManager
     
     public function insertAll(array $xmlBooks): bool
     {
+        // Insert all new authors with one DB query.
         if (!$this->insertNewAuthors($xmlBooks)) {
             return false;
         }
 
+        // Read all DB authors with one DB query.
+        $dbAuthors = $this->authorRepository->findAll();
         foreach ($xmlBooks as $xmlBook) {
-            // Extract author name and book name from the XML
-            $authorName = trim($xmlBook['xmlBook']->author);
-
             try {
-                $author = $this->authorRepository->getOneBy('name', $authorName);
-                if (is_null($author)) {
-                    // We should never come inside here.
-                    throw new \Exception('No such author in the database.');
-                }
-
+                // Extract author name and book name from the XML
+                $authorName = trim($xmlBook['xmlBook']->author);
                 $bookTitle = trim($xmlBook['xmlBook']->name);
+                
+                // We filter current xml parsed author from database authors.
+                $author = $this->filterAuthor($dbAuthors, $authorName);
+
+                // TODO New books insert with one operation. Similar to the new authors insert.
                 $book = $this->bookRepository->getOneByAuthorAndBookTitle($author, $bookTitle);
                 if (is_null($book)) {
                     $book = $this->bookRepository->insertOne($author, $bookTitle);
@@ -63,7 +66,7 @@ class RecordManager
     private function insertNewAuthors(array $xmlBooks): bool
     {
         try {
-            $authorsArr = $this->authorRepository->getAll();
+            $authorsArr = $this->authorRepository->findAll();
             $authorNames = array_column($authorsArr, 'name');
             $xmlBooksAuthors = [];
             foreach ($xmlBooks as $bookKey => $xmlBook) {
@@ -84,5 +87,29 @@ class RecordManager
         }
         
         return $isInsert;
+    }
+    
+    /**
+     * Filters single author.
+     * Creates an Author entity.
+     *
+     * @param array $dbAuthors
+     * @param string $authorName
+     * @return Author
+     * @throws ApplicationException
+     */
+    private function filterAuthor(array $dbAuthors, string $authorName): Author
+    {
+        $filteredAuthors = array_filter($dbAuthors, function ($item) use ($authorName) {
+            return $item['name'] === $authorName;
+        });
+        $authorAssoc = count($filteredAuthors) > 0 ? array_shift($filteredAuthors) : [];
+        $author = AuthorFactory::createFromDb($authorAssoc);
+        if (is_null($author)) {
+            // We should never come inside here.
+            throw new ApplicationException('No such author in the database.');
+        }
+        
+        return $author;
     }
 }

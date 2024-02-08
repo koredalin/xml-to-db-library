@@ -5,3 +5,4 @@ vendor/
 
 # Files
 composer.lock
+config/database.local.php
