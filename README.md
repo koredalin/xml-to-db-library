@@ -50,6 +50,7 @@ All exceptions are logged to the `/logs` directory, aiding in debugging and moni
 2. Run `composer install` to install required PHP dependencies.
 3. Configure your database connection in `config/database.php`.
 4. Execute the provided SQL scripts to create the necessary database schema.
+- The sql scripts are in "/config/database_dumps" folder.
 5. Set up the cron job as described in `docs/xml_to_db_cron_job.md`.
 
 ### Running the Application

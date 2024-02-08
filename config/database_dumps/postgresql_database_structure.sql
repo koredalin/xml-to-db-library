@@ -1,0 +1,28 @@
+-- Creates database "library".
+CREATE DATABASE library
+    WITH OWNER = your_username
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.utf8'
+    LC_CTYPE = 'en_US.utf8'
+    TEMPLATE = template0;
+
+-- Creates table "authors".
+CREATE TABLE authors (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Creates table "books".
+CREATE TABLE books (
+  id SERIAL PRIMARY KEY,
+  author_id INTEGER NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_author
+    FOREIGN KEY(author_id) 
+    REFERENCES authors(id)
+    ON DELETE CASCADE
+);
