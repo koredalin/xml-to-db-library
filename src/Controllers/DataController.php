@@ -2,12 +2,7 @@
 
 namespace Library\Controllers;
 
-use Library\Request;
-
-use Library\Services\XmlIterator;
 use Library\Repositories\AuthorRepository;
-use Library\Repositories\BookRepository;
-use Library\Services\RecordManager;
 use Library\Services\Logger;
 
 /**

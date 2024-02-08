@@ -2,7 +2,7 @@
 
 namespace Library;
 
-use Library\Services\Database;
+use Library\Services\AbstractDatabase;
 
 /**
  * Description of Router
@@ -14,7 +14,7 @@ class Router
     protected $routes = [];
     
     public function __construct(
-        private Database $database
+        private AbstractDatabase $database
     ) {}
 
     private function addRoute($route, $controller, $action, $method)

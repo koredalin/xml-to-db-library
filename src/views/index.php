@@ -3,9 +3,9 @@
 <div class="default-container">
     <h1><?php echo $title; ?></h1>
 
-    <div>
-        <div><button id="xml_parse_btn" class="parse-btn" >Parse XML input</button></div>
-        <div>
+    <div class="controls">
+        <div class="control-group"><button id="xml_parse_btn" class="parse-btn" >Parse XML input</button></div>
+        <div class="control-group">
             <input type="text" name="author_name_search" id="author_name_search" >
             <button id="author_name_search_submit" class="search-btn">Author Search</button>
         </div>

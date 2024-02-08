@@ -1,6 +1,7 @@
 <?php
 
-use Library\Services\Database;
+use Library\Services\Databases\MySqlDatabase;
+use Library\Services\Databases\PSqlDatabase;
 use Library\Router;
 use Library\Controllers\HomeController;
 use Library\Controllers\ParserController;
@@ -8,11 +9,11 @@ use Library\Controllers\DataController;
 
 $dbConfig = require '../config/database.php';
 
-$database = new Database(
-    $dbConfig['host'],
-    $dbConfig['dbName'],
-    $dbConfig['userName'],
-    $dbConfig['password']
+$database = new PSqlDatabase(
+    $dbConfig['psql']['host'],
+    $dbConfig['psql']['dbName'],
+    $dbConfig['psql']['userName'],
+    $dbConfig['psql']['password']
 );
 
 $router = new Router($database);

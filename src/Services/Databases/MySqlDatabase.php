@@ -1,27 +1,16 @@
 <?php
 
-namespace Library\Services;
+namespace Library\Services\Databases;
 
 use PDO;
 
 /**
- * Description of Database
+ * Description of MySqlDatabase
  *
  * @author H1
  */
-class Database
+class MySqlDatabase extends AbstractDatabase
 {
-    private ?PDO $conn;
-
-    public function __construct(
-        private string $host,
-        private string $dbName,
-        private string $userName,
-        private string $password
-    ) {
-        $this->conn = null;
-    }
-
     public function getConnection(): PDO
     {
         if ($this->conn) {

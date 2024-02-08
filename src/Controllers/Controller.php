@@ -2,7 +2,7 @@
 
 namespace Library\Controllers;
 
-use Library\Services\Database;
+use Library\Services\AbstractDatabase;
 
 use Library\Request;
 
@@ -23,7 +23,7 @@ class Controller
 
     public function __construct(
         protected Request $request,
-        protected Database $database
+        protected AbstractDatabase $database
     ) {
         $this->db = $this->database->getConnection();
     }

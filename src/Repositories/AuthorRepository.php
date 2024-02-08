@@ -64,12 +64,13 @@ class AuthorRepository
 
     public function insertMany(array $authorNames): bool
     {
-        $placeholders = implode(',', array_fill(0, count($authorNames), '(?)'));
+        $uniqueAutorNames = array_values(array_unique($authorNames));
+        $placeholders = implode(',', array_fill(0, count($uniqueAutorNames), '(?)'));
         $sql = "INSERT INTO " . self::TABLE_NAME . " (name) VALUES " . $placeholders;
 
         $stmt = $this->conn->prepare($sql);
 
-        foreach (array_values($authorNames) as $index => $name) {
+        foreach ($uniqueAutorNames as $index => $name) {
             $stmt->bindValue($index + 1, $name);
         }
 

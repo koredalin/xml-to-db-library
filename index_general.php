@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-use Library\Services\Database;
+use Library\Services\AbstractDatabase;
 use Library\Services\XmlIterator;
 use Library\Repositories\AuthorRepository;
 use Library\Repositories\BookRepository;
@@ -10,7 +10,7 @@ use Library\Services\RecordManager;
 
 $dbConfig = require 'config/database.php';
 
-$database = new Database(
+$database = new AbstractDatabase(
     $dbConfig['host'],
     $dbConfig['dbName'],
     $dbConfig['userName'],

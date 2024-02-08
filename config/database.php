@@ -1,8 +1,16 @@
 <?php
 
 return [
-    'host' => 'localhost',
-    'dbName' => 'library',
-    'userName' => 'root',
-    'password' => '',
+    'mysql' => [
+        'host' => 'localhost',
+        'dbName' => 'library',
+        'userName' => 'root',
+        'password' => '',
+    ],
+    'psql' => [
+        'host' => 'localhost',
+        'dbName' => 'library',
+        'userName' => 'postgres',
+        'password' => 'aloe',
+    ],
 ];

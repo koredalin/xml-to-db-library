@@ -38,7 +38,6 @@ class BookRepository
     
     public function getOneByAuthorAndBookTitle(Author $author, string $bookTitle): ?Book
     {
-//        var_dump($bookTitle);
         $authorId = $author->getId();
         $stmt = $this->conn->prepare("SELECT id, author_id, title, created_at, updated_at FROM ".self::TABLE_NAME." WHERE author_id = :author_id AND title = :title");
         $stmt->bindParam(":author_id", $authorId);

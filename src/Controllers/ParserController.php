@@ -2,9 +2,6 @@
 
 namespace Library\Controllers;
 
-use Library\Request;
-
-use Library\Services\Database;
 use Library\Services\XmlIterator;
 use Library\Repositories\AuthorRepository;
 use Library\Repositories\BookRepository;
@@ -27,7 +24,6 @@ class ParserController extends Controller
             $xmlInputAsArray = $xmlIterator->iterate(XmlIterator::XML_FOLDER_PATH);
             
             $recordManager = new RecordManager(
-                $this->database,
                 new AuthorRepository($this->db),
                 new BookRepository($this->db)
             );

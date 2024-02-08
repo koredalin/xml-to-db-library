@@ -2,12 +2,8 @@
 
 namespace Library\Services;
 
-use Library\Services\Database;
-use PDO;
 use Library\Repositories\AuthorRepository;
 use Library\Repositories\BookRepository;
-use Library\Entities\Author;
-use Library\Entities\Book;
 
 /**
  * Description of RecordManager
@@ -16,15 +12,10 @@ use Library\Entities\Book;
  */
 class RecordManager
 {
-    private PDO $conn;
-    
     public function __construct(
-        private Database $database,
         private AuthorRepository $authorRepository,
         private BookRepository $bookRepository
-    ) {
-        $this->conn = $this->database->getConnection();
-    }
+    ) {}
     
     public function insertAll(array $xmlBooks): bool
     {
@@ -36,7 +27,6 @@ class RecordManager
             // Extract author name and book name from the XML
             $authorName = trim($xmlBook['xmlBook']->author);
 
-//            echo '<pre>';
             try {
                 $author = $this->authorRepository->getOneBy('name', $authorName);
                 if (is_null($author)) {
@@ -52,12 +42,10 @@ class RecordManager
                     $book = $this->bookRepository->updateOne($book);
                 }
             } catch (\Exception $ex) {
-                var_dump($ex->getMessage());
                 Logger::error($ex->getMessage(), 'database_errors.log');
 
                 return false;
             }
-//            echo '</pre>';
         }
 
         return true;
@@ -85,7 +73,6 @@ class RecordManager
 
             $isInsert = $this->authorRepository->insertMany($newAuthors);
         } catch (\Exception $ex) {
-            var_dump($ex->getMessage());
             Logger::error($ex->getMessage(), 'database_errors.log');
 
             return false;
